@@ -104,9 +104,9 @@ def chk_secondary_diagonal(board: list, player) -> bool:
 
 
 def is_player_win(board, player):
-    return chk_rows(board, player) or chk_cols(board, player) or chk_primary_diagonal(board,
-                                                                                      player) or chk_primary_diagonal(
-        board, player) or chk_secondary_diagonal(board, player)
+    return chk_rows(board, player) or chk_cols(board, player) \
+           or chk_primary_diagonal(board, player) or chk_primary_diagonal(board, player) or \
+           chk_secondary_diagonal(board, player)
 
 
 def is_board_filled(self):
@@ -118,14 +118,7 @@ def is_board_filled(self):
 
 
 def swap_player_turn(self, player):
-    return 'X' if player == 'O' else 'O'
-
-
-def show_board(self):
-    for row in self.board:
-        for item in row:
-            print(item, end=" ")
-        print()
+    return 'Player1' if player == 'Player2' else 'Player2'
 
 
 board_game = create_board()
