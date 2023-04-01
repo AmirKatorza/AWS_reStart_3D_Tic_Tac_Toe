@@ -31,16 +31,18 @@ def start_game():
     players_dict = {"Player1": ['X', name1], "Player2": ['O', name2]}
 
     print("Who will go first?")
-    # TODO: Add progress bar of 10 seconds
+    # Add progress bar of 5 seconds
     for _ in tqdm(range(100), desc="Shuffling Players..."):
         time.sleep(0.05)
+
     current_player = "Player1" if get_random_first_player() == 1 else "Player2"
     print(f"{current_player}, {players_dict[current_player][1]}, will go first!")
 
     print("Initializing board!")
-    # TODO: Add progress bar of 10 seconds
+    # Add progress bar of 5 seconds
     for _ in tqdm(range(100), desc="Initializing..."):
         time.sleep(0.05)
+
     main_board = create_board()
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -101,14 +103,24 @@ def display_scores():
 
 def main():
     while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        # title = '''
+        #  _   _      _             _
+        # | | (_)    | |           | |
+        # | |_ _  ___| |_ __ _  ___| |_ ___   ___
+        # | __| |/ __| __/ _` |/ __| __/ _ \\ / _ \\
+        # | |_| | (__| || (_| | (__| || (_) |  __/
+        #  \\__|_|\\___|\\__\\__,_|\\___|\\__\\___/ \\___|
+        #  '''
         title = '''
-         _   _      _             _             
-        | | (_)    | |           | |            
-        | |_ _  ___| |_ __ _  ___| |_ ___   ___ 
-        | __| |/ __| __/ _` |/ __| __/ _ \\ / _ \\
-        | |_| | (__| || (_| | (__| || (_) |  __/
-         \\__|_|\\___|\\__\\__,_|\\___|\\__\\___/ \\___|
+         _    _        _                 _             
+        | |  (_)      | |               | |            
+        | |_  _   ___ | |_   __ _   ___ | |_   __     ___ 
+        | __|| | / __|| __| / _` | / __|| __| / _ \\  / _ \\
+        | |_ | || (__ | |  | (_| || (__ | |  | (_) ||  __/
+         \\__||_| \\___| \\__| \\__,_| \\___| \\__| \\___/  \\___|
          '''
+
         print(title)
         print("------------MENU------------")
         print("1. Start New Game ")

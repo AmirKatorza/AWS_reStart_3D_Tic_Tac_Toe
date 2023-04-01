@@ -14,17 +14,16 @@ def create_board() -> dict:
 # Function to print 3D Tic Tac Toe Game Board
 def print_board(board_dict: dict):
     for board_name, board in board_dict.items():
-        print(f'{board_name}:')
-        print("\t   1     2     3")
-        print("\t      |     |")
-        print("\t1  {}  |  {}  |  {}".format(board[0][0], board[0][1], board[0][2]))
-        print('\t _____|_____|_____')
-        print("\t      |     |")
-        print("\t2  {}  |  {}  |  {}".format(board[1][0], board[1][1], board[1][2]))
-        print('\t _____|_____|_____')
-        print("\t      |     |")
-        print("\t3  {}  |  {}  |  {}".format(board[2][0], board[2][1], board[2][2]))
-        print("\t      |     |")
+        print(f"Board {board_name}:")
+        print("\t    1   2   3")
+        print("\t  +---+---+---+")
+        print("\t1 | {} | {} | {} |".format(board[0][0], board[0][1], board[0][2]))
+        print("\t  +---+---+---+")
+        print("\t2 | {} | {} | {} |".format(board[1][0], board[1][1], board[1][2]))
+        print("\t  +---+---+---+")
+        print("\t3 | {} | {} | {} |".format(board[2][0], board[2][1], board[2][2]))
+        print("\t  +---+---+---+")
+        print()
 
 
 def get_random_first_player() -> int:
