@@ -18,7 +18,8 @@ def start_game():
         print(f"Welcome back {name1}\n")
     else:
         df.loc[len(df.index)] = [name1, 0]
-        print(f"{name1} nice to meet you for the first time, have fun!")
+        df.to_csv("score_board.csv", index=False)
+        print(f"{name1}, this is your first time, Have Fun!")
 
     print("Player 2 - O")
     name2 = input("Please Enter your name : ")
@@ -26,6 +27,7 @@ def start_game():
         print(f"Welcome back {name2}\n")
     else:
         df.loc[len(df.index)] = [name2, 0]
+        df.to_csv("score_board.csv", index=False)
         print(f"{name2} nice to meet you for the first time, have fun!")
 
     players_dict = {"Player1": ['X', name1], "Player2": ['O', name2]}
@@ -33,7 +35,8 @@ def start_game():
     print("Who will go first?")
     # Add progress bar of 5 seconds
     for _ in tqdm(range(100), desc="Shuffling Players..."):
-        time.sleep(0.05)
+        time.sleep(0.01)
+    print()
 
     current_player = "Player1" if get_random_first_player() == 1 else "Player2"
     print(f"{current_player}, {players_dict[current_player][1]}, will go first!")
@@ -41,7 +44,8 @@ def start_game():
     print("Initializing board!")
     # Add progress bar of 5 seconds
     for _ in tqdm(range(100), desc="Initializing..."):
-        time.sleep(0.05)
+        time.sleep(0.01)
+    print()
 
     main_board = create_board()
     while True:
@@ -49,8 +53,7 @@ def start_game():
 
         print_board(main_board)
 
-        print(f"{current_player} - {current_player[current_player][1]}, \
-              where would you like to place your {current_player[current_player][0]}?")
+        print(f"{current_player} - {players_dict[current_player][1]}, where would you like to place your {players_dict[current_player][0]}?")
         while True:
             choose_board = input("choose your board [A, B, C]: ")
             if re.match("^[^ABCabc]$", choose_board):
@@ -61,8 +64,8 @@ def start_game():
         while True:
             row, col = input("choose your coordinates - Enter row and column numbers for your move: ").split()
             if re.match("^[123]$", row) and re.match("^[123]$", col):
-                if fix_spot(main_board[choose_board], int(row) - 1, int(col) - 1):
-                    main_board[choose_board][int(row) - 1][int(col) - 1] = players_dict[current_player][0]
+                if fix_spot(main_board[choose_board.upper()], int(row) - 1, int(col) - 1):
+                    main_board[choose_board.upper()][int(row) - 1][int(col) - 1] = players_dict[current_player][0]
                     break
                 else:
                     print("Cell is already occupied!\nPlease provide different coordinates!")
@@ -94,6 +97,10 @@ def update_score_board(name: str):
 
 
 def display_scores():
+    print("+-----------------+")
+    print("|   Score Board   |")
+    print("+-----------------+")
+
     df = pd.read_csv("score_board.csv")
     df.sort_values(by="Score", ascending=False, inplace=True)
     df.reset_index(drop=True, inplace=True)
@@ -103,7 +110,7 @@ def display_scores():
 
 def main():
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
+        # os.system('cls' if os.name == 'nt' else 'clear')
         # title = '''
         #  _   _      _             _
         # | | (_)    | |           | |
@@ -117,7 +124,7 @@ def main():
         | |  (_)      | |               | |            
         | |_  _   ___ | |_   __ _   ___ | |_   __     ___ 
         | __|| | / __|| __| / _` | / __|| __| / _ \\  / _ \\
-        | |_ | || (__ | |  | (_| || (__ | |  | (_) ||  __/
+        | |_ | || (__ | |_ | (_| || (__ | |_ | (_) ||  __/
          \\__||_| \\___| \\__| \\__,_| \\___| \\__| \\___/  \\___|
          '''
 
@@ -137,6 +144,7 @@ def main():
             break
         else:
             print("Invalid input, please try again!")
+        # os.system('cls' if os.name == 'nt' else 'clear')
 
 
 if __name__ == "__main__":
