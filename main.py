@@ -9,7 +9,7 @@ import time
 
 
 def start_game():
-    print("-------------Start Game - Tic-Tac-Toe-------------")
+    print("\n-------------Start Game - Tic-Tac-Toe-------------\n")
 
     df = pd.read_csv('score_board.csv')
     print("Player 1 - X")
@@ -36,6 +36,7 @@ def start_game():
     # Add progress bar of 5 seconds
     for _ in tqdm(range(100), desc="Shuffling Players..."):
         time.sleep(0.01)
+
     print()
 
     current_player = "Player1" if get_random_first_player() == 1 else "Player2"
@@ -45,6 +46,7 @@ def start_game():
     # Add progress bar of 5 seconds
     for _ in tqdm(range(100), desc="Initializing..."):
         time.sleep(0.01)
+
     print()
 
     main_board = create_board()
@@ -93,7 +95,7 @@ def update_score_board(name: str):
     df.sort_values(by="Score", ascending=False, inplace=True)
     df.reset_index(drop=True, inplace=True)
     df.index = np.arange(1, len(df) + 1)
-    df.to_csv("score_board.csv")
+    df.to_csv("score_board.csv", index=False)
 
 
 def display_scores():
