@@ -59,7 +59,7 @@ def start_game():
                 break
 
         while True:
-            row, col = input("choose your coordinates - Enter row and column numbers to fix a spot: ").split()
+            row, col = input("choose your coordinates - Enter row and column numbers for your move: ").split()
             if re.match("^[123]$", row) and re.match("^[123]$", col):
                 if fix_spot(main_board[choose_board], int(row) - 1, int(col) - 1):
                     main_board[choose_board][int(row) - 1][int(col) - 1] = players_dict[current_player][0]
@@ -69,7 +69,7 @@ def start_game():
             else:
                 print("Invalid input, Please try Again!")
 
-        # checking whether current player is won or not
+        # checking whether current player has won or not
         if is_win(main_board, players_dict[current_player][0]):
             print(f"{current_player} - {players_dict[current_player][1]}, wins the game!")
             update_score_board(players_dict[current_player][1])
