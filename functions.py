@@ -33,19 +33,22 @@ def get_random_first_player():
 
 
 def fix_spot(board, row, col, player):
-    board[row][col] = player
+    if not board[row][col] in ["X", "O", "*"]:
+        return True
+    else:
+        return False
 
 
-def alternative_board(board_dict: dict) -> dict:
+def extract_all_boards(board_dict: dict) -> dict:
     alt_board_rows = ["D", "E", "F"]
     alt_board_cols = ["G", "H", "I"]
-    alt_board_dict = {}
+    alt_boards_dict = {}
 
     for i, letter in enumerate(alt_board_rows):
         tmp_board = []
         for board in board_dict.values():
             tmp_board.append(board[i])
-        alt_board_dict[letter] = tmp_board
+        alt_boards_dict[letter] = tmp_board
 
     for i, letter in enumerate(alt_board_cols):
         tmp_board = []
@@ -53,10 +56,10 @@ def alternative_board(board_dict: dict) -> dict:
             tmp_col = []
             for j in range(3):
                 tmp_col.append(board[j][i])
-        tmp_board.append(tmp_col)
-    alt_board_dict[letter] = tmp_board
+            tmp_board.append(tmp_col)
+        alt_boards_dict[letter] = tmp_board
 
-    return alt_board_dict
+    return alt_boards_dict
 
 
 def chk_rows(board: list, player) -> bool:
@@ -103,7 +106,8 @@ def chk_secondary_diagonal(board: list, player) -> bool:
         return win
 
 
-def is_player_win(board, player):
+def is_win(board_dict: dict, player):
+
     return chk_rows(board, player) or chk_cols(board, player) \
            or chk_primary_diagonal(board, player) or chk_primary_diagonal(board, player) or \
            chk_secondary_diagonal(board, player)
