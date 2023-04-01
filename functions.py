@@ -6,7 +6,7 @@ def create_board() -> dict:
     board_names = ["A", "B", "C"]
     boards_dict = {}
     for board in board_names:
-        boards_dict[board] = [[' ' for i in range(3)] for j in range(3)]
+        boards_dict[board] = [[' ' for _ in range(3)] for _ in range(3)]
     boards_dict["B"][1][1] = '*'  # This Option will be invalid
     return boards_dict
 
@@ -25,21 +25,20 @@ def print_board(board_dict: dict):
         print("\t      |     |")
         print("\t3  {}  |  {}  |  {}".format(board[2][0], board[2][1], board[2][2]))
         print("\t      |     |")
-        # print("\n")
 
 
-def get_random_first_player():
+def get_random_first_player() -> int:
     return random.randint(0, 1)
 
 
-def fix_spot(board, row, col, player):
+def fix_spot(board, row, col) -> bool:
     if not board[row][col] in ["X", "O", "*"]:
         return True
     else:
         return False
 
 
-def extract_all_boards(board_dict: dict) -> dict:
+def __extract_all_boards(board_dict: dict) -> dict:
     alt_board_rows = ["D", "E", "F"]
     alt_board_cols = ["G", "H", "I"]
     alt_boards_dict = {}
@@ -72,6 +71,7 @@ def chk_rows(board: list, player) -> bool:
                 break
         if win:
             return win
+    return win
 
 
 def chk_cols(board: list, player) -> bool:
@@ -84,6 +84,7 @@ def chk_cols(board: list, player) -> bool:
                 break
         if win:
             return win
+    return win
 
 
 def chk_primary_diagonal(board: list, player) -> bool:
@@ -92,8 +93,7 @@ def chk_primary_diagonal(board: list, player) -> bool:
         if board[i][i] != player:
             win = False
             break
-    if win:
-        return win
+    return win
 
 
 def chk_secondary_diagonal(board: list, player) -> bool:
@@ -102,28 +102,27 @@ def chk_secondary_diagonal(board: list, player) -> bool:
         if board[i][3 - 1 - i] != player:
             win = False
             break
-    if win:
-        return win
+    return win
 
 
-def is_win(board_dict: dict, player):
+def is_win(board_dict: dict, player) -> bool:
+    all_boards = board_dict | __extract_all_boards(board_dict)
+    for board in all_boards.values():
+        if chk_rows(board, player) or chk_cols(board, player) \
+                or chk_primary_diagonal(board, player) or chk_primary_diagonal(board, player) or \
+                chk_secondary_diagonal(board, player):
+            return True
+    return False
 
-    return chk_rows(board, player) or chk_cols(board, player) \
-           or chk_primary_diagonal(board, player) or chk_primary_diagonal(board, player) or \
-           chk_secondary_diagonal(board, player)
 
-
-def is_board_filled(self):
-    for row in self.board:
-        for item in row:
-            if item == '-':
-                return False
+def is_board_filled(board_dict: dict) -> bool:
+    for board in board_dict.values():
+        for row in board:
+            for item in row:
+                if item == ' ':
+                    return False
     return True
 
 
-def swap_player_turn(self, player):
+def swap_player_turn(player):
     return 'Player1' if player == 'Player2' else 'Player2'
-
-
-board_game = create_board()
-print_board(board_game)

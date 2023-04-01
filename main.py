@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from IPython.display import display
 from functions import *
+from tqdm import tqdm
+import time
 
 
 def start_game():
@@ -28,33 +30,36 @@ def start_game():
 
     players_dict = {"Player1": ['X', name1], "Player2": ['O', name2]}
 
-    print("Who will go first? Shuffling Players...")
+    print("Who will go first?")
     # TODO: Add progress bar of 10 seconds
+    for _ in tqdm(range(100), desc="Shuffling Players..."):
+        time.sleep(0.05)
     current_player = "Player1" if get_random_first_player() == 1 else "Player2"
     print(f"{current_player}, {players_dict[current_player][1]}, will go first!")
 
-    print("Initializing board...")
+    print("Initializing board!")
     # TODO: Add progress bar of 10 seconds
+    for _ in tqdm(range(100), desc="Initializing..."):
+        time.sleep(0.05)
     main_board = create_board()
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
 
         print_board(main_board)
 
-        print(
-            f"{current_player} - {current_player[current_player][1]}, where would you like to place your {current_player[current_player][0]}?")
+        print(f"{current_player} - {current_player[current_player][1]}, \
+              where would you like to place your {current_player[current_player][0]}?")
         while True:
             choose_board = input("choose your board [A, B, C]: ")
             if re.match("^[^ABCabc]$", choose_board):
                 print("Invalid input, Please try Again!")
-                # choose_board = input(f"{players_dict[current_player][1]}, choose your board [A, B, C]: ")
             else:
                 break
 
         while True:
             row, col = input("choose your coordinates - Enter row and column numbers to fix a spot: ").split()
             if re.match("^[123]$", row) and re.match("^[123]$", col):
-                if fix_spot(main_board[choose_board], int(row) - 1, int(col) - 1, players_dict[current_player][0]):
+                if fix_spot(main_board[choose_board], int(row) - 1, int(col) - 1):
                     main_board[choose_board][int(row) - 1][int(col) - 1] = players_dict[current_player][0]
                     break
                 else:
@@ -62,22 +67,28 @@ def start_game():
             else:
                 print("Invalid input, Please try Again!")
 
-    #         # checking whether current player is won or not
-    #         if self.is_player_win(player):
-    #             print(f"Player {player} wins the game!")
-    #             break
-    #
-    #         # checking whether the game is draw or not
-    #         if self.is_board_filled():
-    #             print("Match Draw!")
-    #             break
-    #
-    #         # swapping the turn
-    #         player = self.swap_player_turn(player)
-    #
-    #     # showing the final view of board
-    #     print()
-    #     self.show_board()
+        # checking whether current player is won or not
+        if is_win(main_board, players_dict[current_player][0]):
+            print(f"{current_player} - {players_dict[current_player][1]}, wins the game!")
+            update_score_board(players_dict[current_player][1])
+            break
+
+        # checking whether the game is draw or not
+        if is_board_filled(main_board):
+            print("Match Draw!")
+            break
+
+        # swapping the turn
+        current_player = swap_player_turn(current_player)
+
+
+def update_score_board(name: str):
+    df = pd.read_csv("score_board.csv")
+    df.loc[df['Name'] == name, 'Score'] = df[df['Name'] == name]['Score'] + 1
+    df.sort_values(by="Score", ascending=False, inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    df.index = np.arange(1, len(df) + 1)
+    df.to_csv("score_board.csv")
 
 
 def display_scores():
