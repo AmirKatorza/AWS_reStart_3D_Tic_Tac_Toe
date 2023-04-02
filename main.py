@@ -1,34 +1,20 @@
 import os
 import re
-import pandas as pd
-import numpy as np
-from IPython.display import display
-from functions import *
 from tqdm import tqdm
 import time
+from functions import *
 
 
 def start_game():
     print("\n-------------Start Game - Tic-Tac-Toe-------------\n")
 
-    df = pd.read_csv('score_board.csv')
     print("Player 1 - X")
     name1 = input("Please Enter your name : ")
-    if name1 in df['Name'].values:
-        print(f"Welcome back {name1}\n")
-    else:
-        df.loc[len(df.index)] = [name1, 0]
-        df.to_csv("score_board.csv", index=False)
-        print(f"{name1}, this is your first time, Have Fun!")
+    create_user(name1)
 
     print("Player 2 - O")
     name2 = input("Please Enter your name : ")
-    if name2 in df['Name'].values:
-        print(f"Welcome back {name2}\n")
-    else:
-        df.loc[len(df.index)] = [name2, 0]
-        df.to_csv("score_board.csv", index=False)
-        print(f"{name2} nice to meet you for the first time, have fun!")
+    create_user(name2)
 
     players_dict = {"Player1": ['X', name1], "Player2": ['O', name2]}
 
@@ -55,7 +41,8 @@ def start_game():
 
         print_board(main_board)
 
-        print(f"{current_player} - {players_dict[current_player][1]}, where would you like to place your {players_dict[current_player][0]}?")
+        print(
+            f"{current_player} - {players_dict[current_player][1]}, where would you like to place your {players_dict[current_player][0]}?")
         while True:
             choose_board = input("choose your board [A, B, C]: ")
             if re.match("^[^ABCabc]$", choose_board):
@@ -89,48 +76,18 @@ def start_game():
         current_player = swap_player_turn(current_player)
 
 
-def update_score_board(name: str):
-    df = pd.read_csv("score_board.csv")
-    df.loc[df['Name'] == name, 'Score'] = df[df['Name'] == name]['Score'] + 1
-    df.sort_values(by="Score", ascending=False, inplace=True)
-    df.reset_index(drop=True, inplace=True)
-    df.index = np.arange(1, len(df) + 1)
-    df.to_csv("score_board.csv", index=False)
-
-
-def display_scores():
-    print("+-----------------+")
-    print("|   Score Board   |")
-    print("+-----------------+")
-
-    df = pd.read_csv("score_board.csv")
-    df.sort_values(by="Score", ascending=False, inplace=True)
-    df.reset_index(drop=True, inplace=True)
-    df.index = np.arange(1, len(df) + 1)
-    display(df)
-
-
 def main():
-    while True:
-        # os.system('cls' if os.name == 'nt' else 'clear')
-        # title = '''
-        #  _   _      _             _
-        # | | (_)    | |           | |
-        # | |_ _  ___| |_ __ _  ___| |_ ___   ___
-        # | __| |/ __| __/ _` |/ __| __/ _ \\ / _ \\
-        # | |_| | (__| || (_| | (__| || (_) |  __/
-        #  \\__|_|\\___|\\__\\__,_|\\___|\\__\\___/ \\___|
-        #  '''
-        title = '''
-         _    _        _                 _             
-        | |  (_)      | |               | |            
-        | |_  _   ___ | |_   __ _   ___ | |_   __     ___ 
-        | __|| | / __|| __| / _` | / __|| __| / _ \\  / _ \\
-        | |_ | || (__ | |_ | (_| || (__ | |_ | (_) ||  __/
-         \\__||_| \\___| \\__| \\__,_| \\___| \\__| \\___/  \\___|
-         '''
+    title = '''
+             _    _        _                 _             
+            | |  (_)      | |               | |            
+            | |_  _   ___ | |_   __ _   ___ | |_   __     ___ 
+            | __|| | / __|| __| / _` | / __|| __| / _ \\  / _ \\
+            | |_ | || (__ | |_ | (_| || (__ | |_ | (_) ||  __/
+             \\__||_| \\___| \\__| \\__,_| \\___| \\__| \\___/  \\___|
+             '''
+    print(title)
 
-        print(title)
+    while True:
         print("------------MENU------------")
         print("1. Start New Game ")
         print("2. Display Score Board")
@@ -143,6 +100,7 @@ def main():
         elif choice == "2":
             display_scores()
         elif choice == "3":
+            print("GoodBye!")
             break
         else:
             print("Invalid input, please try again!")

@@ -1,4 +1,18 @@
 import random
+import pandas as pd
+import numpy as np
+from IPython.display import display
+
+
+def create_user(name: str):
+    df = pd.read_csv('score_board.csv')
+    if name in df['Name'].values:
+        print(f"Welcome back {name}\n")
+    else:
+        df.loc[len(df.index)] = [name, 0]
+        df.to_csv("score_board.csv", index=False)
+        print(f"Hello {name}! This is your first time here.")
+        print("New User was created.")
 
 
 # Function to hold the logic of the 3D Board Game
@@ -125,3 +139,24 @@ def is_board_filled(board_dict: dict) -> bool:
 
 def swap_player_turn(player):
     return 'Player1' if player == 'Player2' else 'Player2'
+
+
+def update_score_board(name: str):
+    df = pd.read_csv("score_board.csv")
+    df.loc[df['Name'] == name, 'Score'] = df[df['Name'] == name]['Score'] + 1
+    df.sort_values(by="Score", ascending=False, inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    df.index = np.arange(1, len(df) + 1)
+    df.to_csv("score_board.csv", index=False)
+
+
+def display_scores():
+    print("+-----------------+")
+    print("|   Score Board   |")
+    print("+-----------------+\n")
+
+    df = pd.read_csv("score_board.csv")
+    df.sort_values(by="Score", ascending=False, inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    df.index = np.arange(1, len(df) + 1)
+    display(df)
