@@ -2,6 +2,9 @@ import random
 import pandas as pd
 import numpy as np
 from IPython.display import display
+from collections import namedtuple
+
+BOARD_SIZE = 3
 
 
 def create_user(name: str):
@@ -12,7 +15,7 @@ def create_user(name: str):
         df.loc[len(df.index)] = [name, 0]
         df.to_csv("score_board.csv", index=False)
         print(f"Hello {name}! This is your first time here.")
-        print("New User was created.")
+        print("New User was created.\n")
 
 
 # Function to hold the logic of the 3D Board Game
@@ -20,7 +23,7 @@ def create_board() -> dict:
     board_names = ["A", "B", "C"]
     boards_dict = {}
     for board in board_names:
-        boards_dict[board] = [[' ' for _ in range(3)] for _ in range(3)]
+        boards_dict[board] = [[' ' for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
     boards_dict["B"][1][1] = '*'  # This Option will be invalid
     return boards_dict
 
@@ -66,7 +69,7 @@ def __extract_all_boards(board_dict: dict) -> dict:
         tmp_board = []
         for board in board_dict.values():
             tmp_col = []
-            for j in range(3):
+            for j in range(BOARD_SIZE):
                 tmp_col.append(board[j][i])
             tmp_board.append(tmp_col)
         alt_boards_dict[letter] = tmp_board
@@ -76,9 +79,9 @@ def __extract_all_boards(board_dict: dict) -> dict:
 
 def chk_rows(board: list, player) -> bool:
     win = None
-    for i in range(3):
+    for i in range(BOARD_SIZE):
         win = True
-        for j in range(3):
+        for j in range(BOARD_SIZE):
             if board[i][j] != player:
                 win = False
                 break
@@ -89,9 +92,9 @@ def chk_rows(board: list, player) -> bool:
 
 def chk_cols(board: list, player) -> bool:
     win = None
-    for i in range(3):
+    for i in range(BOARD_SIZE):
         win = True
-        for j in range(3):
+        for j in range(BOARD_SIZE):
             if board[j][i] != player:
                 win = False
                 break
@@ -102,7 +105,7 @@ def chk_cols(board: list, player) -> bool:
 
 def chk_primary_diagonal(board: list, player) -> bool:
     win = True
-    for i in range(3):
+    for i in range(BOARD_SIZE):
         if board[i][i] != player:
             win = False
             break
@@ -111,7 +114,7 @@ def chk_primary_diagonal(board: list, player) -> bool:
 
 def chk_secondary_diagonal(board: list, player) -> bool:
     win = True
-    for i in range(3):
+    for i in range(BOARD_SIZE):
         if board[i][3 - 1 - i] != player:
             win = False
             break
@@ -139,6 +142,18 @@ def is_board_filled(board_dict: dict) -> bool:
 
 def swap_player_turn(player):
     return 'Player1' if player == 'Player2' else 'Player2'
+
+
+def get_free_cells(board_dict: dict) -> list:
+    Cell = namedtuple('Cell', "board row col")
+    free_cells = []
+    for board_key in board_dict.keys():
+        for i in range(BOARD_SIZE):
+            for j in range(BOARD_SIZE):
+                if not board_dict[board_key][i][j] in ['X', 'O', '*']:
+                    free_cell = Cell(board_key, i, j)
+                    free_cells.append(free_cell)
+    return free_cells
 
 
 def update_score_board(name: str):

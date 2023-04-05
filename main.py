@@ -12,25 +12,36 @@ def start_game():
     name1 = input("Please Enter your name : ")
     create_user(name1)
 
-    print("Player 2 - O")
-    name2 = input("Please Enter your name : ")
-    create_user(name2)
+    while True:
+        player2_choice = input("Who would you like to play against:\n0 - Human Player\n1 - Computer\n")
+        if re.match("^[01]$", player2_choice):
+            break
+        else:
+            print("Invalid choice, please try again")
+
+    if int(player2_choice) == 0:
+        print("Player 2 - O")
+        name2 = input("Please Enter your name : ")
+        create_user(name2)
+    else:
+        print("You chose to play against the computer - Good Luck!\n")
+        name2 = "COMP"
 
     players_dict = {"Player1": ['X', name1], "Player2": ['O', name2]}
 
     print("Who will go first?")
     # Add progress bar of 5 seconds
-    for _ in tqdm(range(100), desc="Shuffling Players..."):
+    shuffle_bar = tqdm(range(100), desc="Shuffling Players...")
+    for _ in shuffle_bar:
         time.sleep(0.01)
 
-    print()
-
     current_player = "Player1" if get_random_first_player() == 1 else "Player2"
-    print(f"{current_player}, {players_dict[current_player][1]}, will go first!")
+    print(f"\n{current_player}, {players_dict[current_player][1]}, will go first!\n")
 
     print("Initializing board!")
     # Add progress bar of 5 seconds
-    for _ in tqdm(range(100), desc="Initializing..."):
+    init_bar = tqdm(range(100), desc="Initializing...")
+    for _ in init_bar:
         time.sleep(0.01)
 
     print()
@@ -41,35 +52,42 @@ def start_game():
 
         print_board(main_board)
 
-        print(
-            f"{current_player} - {players_dict[current_player][1]}, where would you like to place your {players_dict[current_player][0]}?")
-        while True:
-            choose_board = input("choose your board [A, B, C]: ")
-            if re.match("^[^ABCabc]$", choose_board):
-                print("Invalid input, Please try Again!")
-            else:
-                break
-
-        while True:
-            row, col = input("choose your coordinates - Enter row and column numbers for your move: ").split()
-            if re.match("^[123]$", row) and re.match("^[123]$", col):
-                if fix_spot(main_board[choose_board.upper()], int(row) - 1, int(col) - 1):
-                    main_board[choose_board.upper()][int(row) - 1][int(col) - 1] = players_dict[current_player][0]
-                    break
+        if players_dict[current_player][1] == "COMP":
+            free_cells = get_free_cells(main_board)
+            rand_choice = random.choice(free_cells)
+            print("Computer is making its move!")
+            main_board[rand_choice.board][rand_choice.row][rand_choice.col] = players_dict[current_player][0]
+        else:
+            print(f"{current_player} - {players_dict[current_player][1]}, ", end="")
+            print(f"where would you like to place your {players_dict[current_player][0]}?")
+            while True:
+                choose_board = input("choose your board [A, B, C]: ")
+                if re.match("^[^ABCabc]$", choose_board):
+                    print("Invalid input, Please try Again!")
                 else:
-                    print("Cell is already occupied!\nPlease provide different coordinates!")
-            else:
-                print("Invalid input, Please try Again!")
+                    break
+
+            while True:
+                row, col = input("choose your coordinates - Enter row and column numbers for your move: ").split()
+                if re.match("^[123]$", row) and re.match("^[123]$", col):
+                    if fix_spot(main_board[choose_board.upper()], int(row) - 1, int(col) - 1):
+                        main_board[choose_board.upper()][int(row) - 1][int(col) - 1] = players_dict[current_player][0]
+                        break
+                    else:
+                        print("Cell is already occupied!\nPlease provide different coordinates!")
+                else:
+                    print("Invalid input, Please try Again!")
 
         # checking whether current player has won or not
         if is_win(main_board, players_dict[current_player][0]):
-            print(f"{current_player} - {players_dict[current_player][1]}, wins the game!")
-            update_score_board(players_dict[current_player][1])
+            print(f"{current_player} - {players_dict[current_player][1]}, wins the game!\n")
+            if players_dict[current_player][1] != "COMP":
+                update_score_board(players_dict[current_player][1])
             break
 
         # checking whether the game is draw or not
         if is_board_filled(main_board):
-            print("Match Draw!")
+            print("Match Draw!\n")
             break
 
         # swapping the turn
