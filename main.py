@@ -48,14 +48,14 @@ def start_game():
 
     main_board = create_board()
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
+        # os.system('cls' if os.name == 'nt' else 'clear')
 
         print_board(main_board)
 
         if players_dict[current_player][1] == "COMP":
             free_cells = get_free_cells(main_board)
             rand_choice = random.choice(free_cells)
-            print("Computer is making its move!")
+            print("Computer is making its move!\n")
             main_board[rand_choice.board][rand_choice.row][rand_choice.col] = players_dict[current_player][0]
         else:
             print(f"{current_player} - {players_dict[current_player][1]}, ", end="")
