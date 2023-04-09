@@ -54,7 +54,7 @@ def fix_spot(board, row, col) -> bool:
         return False
 
 
-def __extract_all_boards(board_dict: dict) -> dict:
+def _extract_all_boards(board_dict: dict) -> dict:
     alt_board_rows = ["D", "E", "F"]
     alt_board_cols = ["G", "H", "I"]
     alt_boards_dict = {}
@@ -122,7 +122,7 @@ def chk_secondary_diagonal(board: list, player) -> bool:
 
 
 def is_win(board_dict: dict, player) -> bool:
-    all_boards = board_dict | __extract_all_boards(board_dict)
+    all_boards = board_dict | _extract_all_boards(board_dict)
     for board in all_boards.values():
         if chk_rows(board, player) or chk_cols(board, player) \
                 or chk_primary_diagonal(board, player) or chk_primary_diagonal(board, player) or \
